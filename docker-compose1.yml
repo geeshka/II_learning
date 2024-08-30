@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  neural_finetuned:
+    build:
+      context: .
+      dockerfile: Dockerfile.2
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - PROJECT_DIR=/app
+      - DISPLAY=${DISPLAY}  
+    volumes:
+      - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix  
+      - ./graphs:/app/graphs  
+      - ./models:/app/models  
+      - ./car_brands1:/app/car_brands1
+      - ./car_brands_test:/app/car_brands_test
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+      - .:/app  
+      - /dev/bus/usb:/dev/bus/usb
+    command: python3 fine_tuned.py 
